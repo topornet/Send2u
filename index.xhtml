@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/dscliente.xhtml">
+
+	<!--Inicio Mensagem de Boas Vindas-->
+	<ui:define name="principal">
+		 
+		<div id="divMsg">
+			<p:messages autoUpdate="true"  closable="true" id="msgForm"
+				showDetail="true"/>
+		</div>
+		
+		<h:form prependId="false">
+		 
+		</h:form>
+		
+		<h:panelGrid columns="3" width="100%">
+
+			<p:panel id="perfil">
+
+				<div class="sidebar_box">
+
+					<div class="sidebar_box_content">
+
+						<img src="resources/images/perfil.png" class="sidebar_icon_left" />
+						<h:outputText value="Meu Perfil" styleClass="label_dashboard" />
+						<ul>
+
+							<li><h:outputText value="#{usuarioBean.cs.empresa.id} - " />
+								<h:outputText value="#{usuarioBean.cs.empresa.nome}" /></li>
+
+							<li><h:outputText value="Usuário: " /> <h:outputText
+									value="#{usuarioBean.cs.usuario.nome}" /></li>
+
+							<li><h:outputText value="Alterar minha " /> <p:commandLink
+									value="Senha" type="button" id="btnAltSenha" /></li>
+
+
+						</ul>
+
+						<p:overlayPanel id="senhaPanel" for="btnAltSenha"
+							hideEffect="fade" dynamic="true">
+							<h:form prependId="false" id="FormAlteracaoSenha">
+								<h:inputHidden value="#{usuarioBean.codigo}" id="txtCodigo" />
+								<h:inputHidden value="#{usuarioBean.userName}" id="txtUserName" />
+								<center>
+									<h2>
+										<h:outputText value="Alteração de Senha" />
+									</h2>
+								</center>
+
+								<h:panelGrid columns="2">
+									<h:outputText value="Senha Atual" />
+									<p:password value="#{usuarioBean.senhaAtual}" required="true"
+										requiredMessage="Senha atual deve ser informada" size="20"
+										maxlength="50" id="txtSenhaAtual"
+										validator="validaSenhaAtualSenhaNova">
+										<p:ajax event="blur" />
+									</p:password>
+
+									<h:outputText value="Senha Nova" />
+									<p:password value="#{usuarioBean.senhaNova}" required="true"
+										requiredMessage="Senha nova deve ser informada"
+										feedback="true" size="20" maxlength="50" id="txtSenhaNova">
+
+									</p:password>
+
+									<h:outputText value="Confirma Senha" />
+									<p:password value="#{usuarioBean.confirmaSenha}"
+										required="true"
+										requiredMessage="Confirmação Senha deve ser informada"
+										feedback="true" size="20" maxlength="50" id="txtConfSenha"
+										validator="validaConfirmacaoSenha">
+										<p:ajax event="blur" />
+									</p:password>
+
+									<f:facet name="footer">
+
+										<div style="float: left; margin: 0 0 0 95px;">
+											<p:commandButton value="Voltar"
+												icon="ui-icon-arrowreturnthick-1-w" id="btnVoltarSenha"
+												name="btnVoltarSenha" action="index" immediate="true"
+												ajax="false" />
+										</div>
+
+										<div style="float: left; margin: 0 0 0 25px;">
+											<p:commandButton value="Salvar"
+												action="#{usuarioBean.alterarSenha}" ajax="false">
+												<f:param value="index" name="return" />
+											</p:commandButton>
+										</div>
+									</f:facet>
+								</h:panelGrid>
+
+							</h:form>
+						</p:overlayPanel>
+					</div>
+
+				</div>
+
+			</p:panel>
+
+			<p:panel id="conta">
+				<div class="sidebar_box">
+
+					<div class="sidebar_box_content">
+
+						<img src="resources/images/conta_user.png"
+							class="sidebar_icon_left" />
+						<h:outputText value="Minha Conta" styleClass="label_dashboard" />
+						<ul>
+							<li>
+							<h:panelGroup rendered="#{eventoBean.smsComplementarPeriodo == 0}">
+							<h:outputText
+									value="#{eventoBean.smsDiposnivelPeriodo}" styleClass="labelQtdSms">
+									 <f:convertNumber pattern="0000" />  
+								</h:outputText>
+								<h:outputText value=" Saldo SMS" />
+								<h:outputText value=" Excedido!" styleClass="labelSmsExcedido" rendered="false"/>
+							</h:panelGroup>
+							</li>
+							<li>
+								<h:panelGroup rendered="#{eventoBean.smsComplementarPeriodo > 0}">
+								<h:outputText
+									value="#{eventoBean.smsComplementarPeriodo}" styleClass="labelQtdSms">
+									<f:convertNumber minIntegerDigits="4" pattern="0000" />
+								</h:outputText>
+								<h:outputText value=" SMS Complementar" />
+								</h:panelGroup>
+							</li>
+							<li><h:outputText
+									value="#{contatoBean.totalCadastrado}" styleClass="labelQtdSms">
+									<f:convertNumber minIntegerDigits="4" pattern="0000" />
+								</h:outputText>
+								<h:outputText value=" Contatos Cadastrados" />
+							</li>
+							<li><h:outputText
+									value="#{grupoBean.totalCadastrado}" styleClass="labelQtdSms">
+									<f:convertNumber minIntegerDigits="4" pattern="0000" />
+								</h:outputText>
+								<h:outputText value=" Grupos Cadastrados" />
+							</li>
+						</ul>
+
+					</div>
+
+				</div>
+
+			</p:panel>
+
+
+			<p:panel id="acesso_rapido">
+				<div class="sidebar_box">
+
+					<div class="sidebar_box_content">
+
+
+						<img src="resources/images/acesso_rapido.png"
+							class="sidebar_icon_left" />
+						<h:outputText value="Acesso Rápido" styleClass="label_dashboard" />
+
+						<ul>
+							<h:form>
+								<center>
+								<h:outputText value="Rapidez e Praticidade" styleClass="labelPainelAcessoRapido"/>
+
+								<h:panelGrid columns="12">
+								  
+									<h:panelGroup>
+									<h:outputLink value="ConsultaGrupo.xhtml" id="btnConsultaGrupo">
+										<img src="resources/images/consultagrupos.png" />
+									</h:outputLink>
+									<p:tooltip for="btnConsultaGrupo" showEffect="fade" hideEffect="fade"
+									value="Consulta de Grupos" />
+									</h:panelGroup>
+									
+									<h:panelGroup>
+									<h:outputLink value="ConsultaContato.xhtml" id="btnConsultaContato">
+										<img src="resources/images/consultacontatos.png" />
+									</h:outputLink>
+									<p:tooltip for="btnConsultaContato" showEffect="fade" hideEffect="fade"
+									value="Consulta de Contatos" />
+									</h:panelGroup>
+									
+									<h:panelGroup>
+									<h:outputLink value="CadastroGrupo.xhtml" id="btnCadastroGrupo">
+										<img src="resources/images/grupo.png" />
+									</h:outputLink>
+									<p:tooltip for="btnCadastroGrupo" showEffect="fade" hideEffect="fade"
+									value="Cadastro de Grupos" />
+									</h:panelGroup>
+
+									<h:panelGroup>
+									<h:outputLink value="CadastroContato.xhtml" id="btnCadastroContatos">
+										<img src="resources/images/contato.png" width="32" height="32"/>
+									</h:outputLink>
+									<p:tooltip for="btnCadastroContatos" showEffect="fade" hideEffect="fade"
+									value="Cadastro de Contatos" />
+									</h:panelGroup>
+									
+									<h:panelGroup>
+									<h:outputLink value="ImportarContato.xhtml" id="btnImportarContatos">
+										<img src="resources/images/importListContatos.png" width="32" height="32"/>
+									</h:outputLink>
+									<p:tooltip for="btnImportarContatos" showEffect="fade" hideEffect="fade"
+									value="Importar Lista de Contatos" />
+									</h:panelGroup>
+									
+									<h:panelGroup rendered="#{contratoBean.web}" >
+									<h:outputLink value="CadastroEventoLivre.xhtml" id="btnEnvioSimples" >
+										<img src="resources/images/send_sms.png" width="32"
+											height="32"/>
+									</h:outputLink>
+									<p:tooltip for="btnEnvioSimples" showEffect="fade" hideEffect="fade"
+									value="Enviar SMS Simples" />
+									</h:panelGroup>
+		
+									<h:panelGroup rendered="#{contratoBean.web}">
+									<h:outputLink value="CadastroEventoGrupo.xhtml" id="btnSmsGrupo">
+										<img src="resources/images/sendSmsGrupo.png" width="32" height="32" />
+									</h:outputLink>
+									<p:tooltip for="btnSmsGrupo" showEffect="fade" hideEffect="fade"
+									value="Envio SMS em Grupo" />
+									</h:panelGroup>
+		
+									<h:panelGroup rendered="#{contratoBean.web}">
+									<h:outputLink value="CadastroEventoAniver.xhtml" id="btnAniver">
+										<img src="resources/images/aniversariantes.png" width="32" height="32" />
+									</h:outputLink>
+									<p:tooltip for="btnAniver" showEffect="fade" hideEffect="fade"
+									value="Envio SMS para Aniversariantes" />
+									</h:panelGroup>
+			
+									<h:panelGroup>
+									<h:outputLink value="ConsultaAgenda.xhtml" id="btnConsultaAgenda">
+										<img src="resources/images/agenda.png" width="32" height="32"
+											title="Consulta Agenda" />
+									</h:outputLink>
+									<p:tooltip for="btnConsultaAgenda" showEffect="fade" hideEffect="fade"
+									value="Consulta Agenda" />
+									</h:panelGroup>
+
+									<h:panelGroup>
+									<h:outputLink value="ConsultaEvento.xhtml" id="btnConsultaSMS">
+										<img src="resources/images/list_sms.png" width="32"
+											height="32" />
+									</h:outputLink>
+									<p:tooltip for="btnConsultaSMS" showEffect="fade" hideEffect="fade"
+									value="Consulta de SMS" />
+									</h:panelGroup>
+
+																	
+									<h:panelGroup>
+									<h:outputLink value="Suporte.xhtml" id="btnSuporte">
+										<img src="resources/images/suporte.png" width="32" height="32"
+											/>
+									</h:outputLink>
+									<p:tooltip for="btnSuporte" showEffect="fade" hideEffect="fade"
+									value="Suporte, Dúvidas e Sugestões" />
+									</h:panelGroup>
+									
+								
+								</h:panelGrid>
+								</center>
+							</h:form>
+						</ul>
+					</div>
+
+				</div>
+
+			</p:panel>
+
+
+		</h:panelGrid>
+
+		<p:spacer height="15" />
+
+		<h:panelGrid width="100%">
+			<p:panel>
+				<img src="resources/images/graficos.png" width="32" height="32"
+					class="sidebar_icon_left" />
+				<h:outputText value="Meus Gráficos" styleClass="label_dashboard" />
+				<p:spacer height="20" />
+				<p:lineChart id="situacao" value="#{chartBean.categoryModel}"
+					legendPosition="ne"
+					style="height:300px;margin-top:20px;width:1030px"
+					min="0" max="5000" animate="true" />
+			</p:panel>
+		</h:panelGrid>
+		<br />
+		<center>
+			<img src="resources/images/operadoras.jpg" alt="" />
+		</center>
+		<p:growl id="avisoAniversariante" sticky="false" life="300000" showDetail="true" autoUpdate="true" globalOnly="true"/>
+	</ui:define>
+	<!--Fim Mensagem de Boas Vindas-->
+</ui:composition>
+</html>
