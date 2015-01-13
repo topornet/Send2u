@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/dscliente.xhtml">
+
+	<!--Fim Mensagem de Boas Vindas-->
+	<ui:define name="principal">
+
+		<div class="form">
+
+			<!-- Begin Grupo Form -->
+
+			<h1>Sugestões dos Clientes</h1>
+
+			<div class="box_msgaviso">
+				<b><h:outputText styleClass="camposobrigatorios"
+						value="Contato:" /></b>
+				<p:spacer width="3" />
+				Você poderá entrar em contato com nosso atendimento entre o horário comercial de Segunda à Sexta feiras das 08:00 às 18:00 horas, esse canal foi criado para facilitar a comunicação entre a Send2u e seus Clientes.
+			</div>
+			<br /> <br />
+			<h:form id="FormSugestao" prependId="false" >
+				<p:dialog modal="true" widgetVar="statusDialog" header="Enviando..."
+					draggable="false" closable="false" onHide="confirmacao.hide();">
+					<p:graphicImage value="resources/images/smsenviando.gif" />
+				</p:dialog>
+				<div id="divMsg">
+					<p:messages autoUpdate="true" closable="true" id="msgForm"
+						showDetail="true" />
+				</div>
+
+				<p:growl id="messages" showDetail="true" autoUpdate="true" />
+				<p:focus for="txtTipo" />
+
+				<h:panelGrid columns="2" style="margin-bottom:10px;witdh:100%"
+					cellpadding="5">
+
+					<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+
+						<h:outputText value="Tipo Contato" />
+						<h:panelGroup>
+							<p:selectOneMenu name="txtTipo" id="txtTipo" required="true"
+								style="width:350px" requiredMessage="Tipo Contato não informado"
+								value="#{usuarioBean.tipoContato}">
+								<f:selectItem itemLabel="Selecione um Tipo" itemValue="" />
+								<f:selectItem itemLabel="Sugestão" itemValue="Sugestão" />
+								<f:selectItem itemLabel="Dúvida" itemValue="Dúvida" />
+								<f:selectItem itemLabel="Problema" itemValue="Problema" />
+								<f:selectItem itemLabel="Financeiro" itemValue="Financeiro" />
+								<f:selectItem itemLabel="Outros" itemValue="Outros" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+						
+						<h:outputText value="Nome" />
+						<h:panelGroup>
+							<p:inputText name="txtNome" id="txtNome"
+								value="#{usuarioBean.nomeContato}"
+								requiredMessage="Nome do Contato não informado" size="150"
+								style="width:350px" maxlength="50">
+								<f:validateLength minimum="1" maximum="50" />
+								<p:ajax event="blur" update="messages" />
+							</p:inputText>
+
+						</h:panelGroup>
+
+
+						<h:outputText value="Texto Master" />
+						<h:panelGroup>
+							<p:inputTextarea name="txtTexto" id="txtTexto"
+								value="#{usuarioBean.texto}" required="true"
+								requiredMessage="Texto do Contato não informado" size="150"
+								rows="10" style="width:350px" counter="counter" maxlength="1000"
+								counterTemplate="{0} Caracteres restantes.">
+								<f:validateLength minimum="1" maximum="1000" />
+								<p:ajax event="blur" update="messages" />
+							</p:inputTextarea>
+							<h:outputText id="counter" />
+
+						</h:panelGroup>
+
+					</h:panelGrid>
+
+
+					<p:panel id="contato" header="Contatos">
+						<div class="sidebar_box_info">
+
+							<div class="sidebar_box_content_info">
+
+								<img src="resources/images/info.png" class="sidebar_icon_left" />
+
+								<div style="float: right;">
+									<h1>Contatos</h1>
+									<p>
+										Valdomiro Bilharvas Neto <br /> Tim: (11) 98101-7253 <br />
+										Vivo: (11) 97367-3243 <br /> E-mail: suporte@send2u.com.br
+									</p>
+								</div>
+
+								<br /> <br />
+
+							</div>
+
+						</div>
+
+					</p:panel>
+
+				</h:panelGrid>
+
+				<br />
+
+				<div style="float: left;">
+					<p:commandButton value="Voltar" icon="ui-icon-arrowreturnthick-1-w"
+						id="btnVoltarContato" name="btnVoltarContato"
+						onclick="history.back();" />
+					<p:tooltip for="btnVoltarContato" showEffect="fade" hideEffect="fade" value="Retornar para Página Anterior"/>
+				</div>
+
+
+				<div style="float: left; margin: 0 0 0 150px;">
+
+					<p:commandButton id="btnEnviarContato" value="Enviar"
+						alt="Enviar dados para o Contato" oncomplete="confirmacao.show()" icon="ui-icon-transferthick-e-w"> 
+					</p:commandButton>
+					<p:tooltip for="btnEnviarContato" showEffect="fade" hideEffect="fade" value="Enviar Dados"/>
+					<p:spacer width="10" />
+
+					<p:commandButton id="btnLimparContato" value="Limpar"
+						immediate="true" type="reset" action="#{usuarioBean.limpar}" icon="ui-icon-trash"
+						alt="Limpando os dados do Contato" />
+					<p:tooltip for="btnLimparContato" showEffect="fade" hideEffect="fade" value="Limpar dados"/>
+				</div>
+
+				<p:confirmDialog message="Confirma Envio" id="confirmacaoDialog"
+					widgetVar="confirmacao" header="Confirmar" severity="alert"
+					modal="true">
+					<center>
+						<p:commandButton value="Sim"
+							oncomplete="confirmacao.hide()"
+							action="#{usuarioBean.enviarSugestao}"
+							onstart="statusDialog.show();" onsuccess="statusDialog.hide();"
+							onerror="statusDialog.hide();">
+							<f:param name="return" value="#{usuarioBean.originPage}" />
+						</p:commandButton>
+
+						<p:commandButton value="Não" onclick="confirmacao.hide()"
+							type="button" />
+					</center>
+
+				</p:confirmDialog>
+			</h:form>
+
+			<!-- End Contato Form -->
+
+		a!--  -->
+
+		</div>
+	</ui:define>
+
+</ui:composition>
+</html>
